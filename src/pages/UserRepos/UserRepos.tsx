@@ -22,6 +22,7 @@ import {
   AiOutlineCheckCircle,
   AiFillCheckCircle,
 } from "react-icons/ai";
+import { Spinner } from "../../components/Spinner/Spinner";
 
 type RepositoryType = {
   id: number;
@@ -35,6 +36,7 @@ type RepositoryType = {
 export const UserRepos = () => {
   const [repositories, setRepositories] = useState<Array<RepositoryType>>([]);
   const [sortByStars, setSortByStars] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { username } = useParams();
   const navigate = useNavigate();
   const sortDecrescent = (a: RepositoryType, b: RepositoryType): number => {
@@ -45,6 +47,7 @@ export const UserRepos = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       const response = await fetch(
         `https://api.github.com/users/${username}/repos`
@@ -62,6 +65,7 @@ export const UserRepos = () => {
       );
       setRepositories([...sortedCrescent]);
     })();
+    setIsLoading(false);
   }, [sortByStars]);
 
   return (
@@ -73,34 +77,40 @@ export const UserRepos = () => {
         </BackButton>
       </TitleContainer>
       <RepositoriesContainer>
-        <SortButtonContainer>
-          <SortButton onClick={() => setSortByStars(!sortByStars)}>
-            {sortByStars ? <AiFillCheckCircle /> : <AiOutlineCheckCircle />}Sort
-            by stars
-          </SortButton>
-        </SortButtonContainer>
-        {repositories.map((repository) => (
-          <Link key={repository.id} to={`repos/${repository.name}`}>
-            <Repository>
-              <RepositoryNameContainer>
-                <RepositoryName>{repository.name}</RepositoryName>
-                <CountersContainer>
-                  <CounterPill>
-                    {repository.stargazers_count}
-                    <AiFillStar />
-                  </CounterPill>
-                  <CounterPill>
-                    {repository.forks_count}
-                    <CgGitFork />
-                  </CounterPill>
-                </CountersContainer>
-              </RepositoryNameContainer>
-              <RepositoryDescription>
-                {repository.description}
-              </RepositoryDescription>
-            </Repository>
-          </Link>
-        ))}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <SortButtonContainer>
+              <SortButton onClick={() => setSortByStars(!sortByStars)}>
+                {sortByStars ? <AiFillCheckCircle /> : <AiOutlineCheckCircle />}
+                Sort by stars
+              </SortButton>
+            </SortButtonContainer>
+            {repositories.map((repository) => (
+              <Link key={repository.id} to={`repos/${repository.name}`}>
+                <Repository>
+                  <RepositoryNameContainer>
+                    <RepositoryName>{repository.name}</RepositoryName>
+                    <CountersContainer>
+                      <CounterPill>
+                        {repository.stargazers_count}
+                        <AiFillStar />
+                      </CounterPill>
+                      <CounterPill>
+                        {repository.forks_count}
+                        <CgGitFork />
+                      </CounterPill>
+                    </CountersContainer>
+                  </RepositoryNameContainer>
+                  <RepositoryDescription>
+                    {repository.description}
+                  </RepositoryDescription>
+                </Repository>
+              </Link>
+            ))}
+          </>
+        )}
       </RepositoriesContainer>
     </Interface>
   );

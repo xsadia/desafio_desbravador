@@ -9,6 +9,7 @@ import { Searchbar } from "../../components/Searchbar/Searchbar";
 import { useState } from "react";
 import { Interface } from "../../components/UI/Interface";
 import { Link } from "react-router-dom";
+import { Spinner } from "../../components/Spinner/Spinner";
 
 type User = {
   login: string;
@@ -18,8 +19,12 @@ type User = {
 
 export const Home = () => {
   const [users, setUsers] = useState<Array<User>>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleChange = (foundUsers: Array<User>) => {
+    setIsLoading(true);
     setUsers([...foundUsers]);
+    setIsLoading(false);
   };
 
   return (
@@ -27,7 +32,9 @@ export const Home = () => {
       <Text>Search for github users</Text>
       <Searchbar updateUsers={handleChange} />
       <UsersContainer>
-        {users &&
+        {isLoading ? (
+          <Spinner />
+        ) : (
           users.map((user) => (
             <Link key={user.id} to={`/user/${user.login}`}>
               <UserInfoContainer>
@@ -35,7 +42,8 @@ export const Home = () => {
                 <UserName>{user.login}</UserName>
               </UserInfoContainer>
             </Link>
-          ))}
+          ))
+        )}
       </UsersContainer>
     </Interface>
   );
