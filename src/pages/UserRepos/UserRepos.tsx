@@ -1,6 +1,6 @@
 import { Interface } from "../../components/UI/Interface";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BackButton,
   CounterPill,
@@ -46,29 +46,27 @@ export const UserRepos = () => {
     return 0;
   };
 
-  const getRepos = useCallback(async () => {
-    const response = await fetch(
-      `https://api.github.com/users/${username}/repos`
-    );
-
-    const data = await response.json();
-    if (sortByStars) {
-      const sortedDecrescentData = data.sort(sortDecrescent);
-      setRepositories([...sortedDecrescentData]);
-      return;
-    }
-    const sortedCrescent = data.sort(
-      (a: RepositoryType, b: RepositoryType) =>
-        a.stargazers_count - b.stargazers_count
-    );
-    setRepositories([...sortedCrescent]);
-  }, [sortByStars]);
-
   useEffect(() => {
     setIsLoading(true);
-    getRepos();
+    (async () => {
+      const response = await fetch(
+        `https://api.github.com/users/${username}/repos`
+      );
+
+      const data = await response.json();
+      if (sortByStars) {
+        const sortedDecrescentData = data.sort(sortDecrescent);
+        setRepositories([...sortedDecrescentData]);
+        return;
+      }
+      const sortedCrescent = data.sort(
+        (a: RepositoryType, b: RepositoryType) =>
+          a.stargazers_count - b.stargazers_count
+      );
+      setRepositories([...sortedCrescent]);
+    })();
     setIsLoading(false);
-  }, [getRepos]);
+  }, [sortByStars]);
 
   return (
     <Interface>
