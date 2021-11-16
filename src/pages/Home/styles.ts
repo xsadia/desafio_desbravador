@@ -7,6 +7,10 @@ export const Text = styled.h1`
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
+
+  @media screen and (min-width: 720px) {
+    font-size: 48px;
+  }
 `;
 
 export const UsersContainer = styled.div`
@@ -35,6 +39,11 @@ export const UserInfoContainer = styled.div`
   border-radius: 6px;
   transition: filter 0.2s;
 
+  @media screen and (min-width: 720px) {
+    width: 500px;
+    height: fit-content;
+  }
+
   &:hover {
     filter: brightness(0.9);
   }
@@ -42,10 +51,23 @@ export const UserInfoContainer = styled.div`
 
 export const UserName = styled.h1`
   font-size: 16px;
+  background: var(--orange-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  @media screen and (min-width: 720px) {
+    font-size: 24px;
+  }
 `;
 
 export const UserAvatar = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 50px;
+
+  @media screen and (min-width: 720px) {
+    width: 32px;
+    height: 32px;
+  }
 `;

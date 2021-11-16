@@ -4,6 +4,10 @@ export const SearchbarContainer = styled.form`
   display: flex;
   width: 333px;
   height: 46px;
+
+  @media screen and (min-width: 720px) {
+    width: 500px;
+  }
 `;
 
 export const SearchInput = styled.input`
